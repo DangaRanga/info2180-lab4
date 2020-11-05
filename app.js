@@ -3,20 +3,29 @@ window.addEventListener('load', function(){
     searchButton.addEventListener('click', loadPHP);
 });
 
-function loadPHP(event){
-    event.preventDefault();
-    const phpData = fetch('superheroes.php')
+function fetchData(){
+    return fetch('superheroes.php')
     .then(response => {
         if (response.ok){
             return response.text()
         }else{
             console.log('not ok');
-            return Promise.reject('that wasn\'t supposed to happen')
+            return Promise.reject('that wasn\'t supposed to happen');
         }
-    }).then(data =>{
-        let text = document.getElementById('data');
-        alert(`The heroes are \n ${data}`);
-    }).catch(error => console.log('There was an error: ' + error));
-    console.log(phpData)
+    })
+}   
 
+function displayHeroes(data){
+    alert(`The heroes are \n ${data}`);
+    return data;
 }
+
+async function loadPHP(event){
+    event.preventDefault();
+    try{
+        const phpData = await fetchData();
+        const heroes = await displayHeroes(phpData);
+        }catch (error){
+            console.log('There was an error: ' + error);
+        }
+    }   
