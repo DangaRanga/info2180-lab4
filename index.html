@@ -10,12 +10,20 @@
 </head>
 
 <body>
-    <form method='post'>
-        <label for="superhero">Superhero</label><br>
-        <input type="text" id="superhero" name="superhero">
-        <input type="submit" id='search' value="search">
-        <p id="data"></p>
-    </form>
+    <header>
+        <h1>Avengers Character Search</h1>
+    </header>
+    <main>
+        <form action='superheroes.php' id = 'superhero-form'>
+            <h3>Search by Full name or Alias</h3>
+            <label for="superhero">Superhero</label><br>
+            <input type="text" id="superhero" name="superhero">
+            <input type="submit" id='search' value="search">
+        </form>
+        <h2>RESULT</h2>
+        <hr>
+        <p id="result"></p>
+    </main>
 </body>
 
 </html>

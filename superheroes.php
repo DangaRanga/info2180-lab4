@@ -63,12 +63,43 @@ $superheroes = [
   ], 
 ];
 
-$data = json_encode($superheroes);
+
 
 ?>
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
-<?php endforeach; ?>
-</ul>
+
+<?php 
+
+function retrieveHeroData($superheroes, $formData){
+    foreach($superheroes as $superhero){
+        if($formData == strtolower($superhero['name']) || $formData == strtolower($superhero['alias'])){
+            return $superhero;
+        }
+    
+    }   
+    return "Hero not found";
+}
+
+// If the fetch request is a GET, the html list is sent
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $line = '';
+    $line .= "<ul>";
+   foreach ($superheroes as $superhero):
+        $line .= "<li>{$superhero['alias']}</li>";
+    endforeach;
+    $line .= "</ul>";
+    echo $line;
+
+// If the fetch request is a POST, the array of heroes is sent as JSON data
+}elseif ($_SERVER['REQUEST_METHOD'] == 'POST'){
+    
+    // Sanitize the data
+    $unsanitizedData = json_decode(file_get_contents('php://input'), true);
+    $sanitizedData = filter_var($unsanitizedData, FILTER_SANITIZE_STRING);
+    $heroData = retrieveHeroData($superheroes, strtolower($sanitizedData));
+    // Send hero data back to server as JSON
+    echo json_encode($heroData);
+}
+    
+
+?>
