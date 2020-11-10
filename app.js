@@ -58,11 +58,9 @@ function removeErrorClass(targetDiv){
  */
 function displayHeroes(data){
     result = document.getElementById('result');
-    
     // Removing the error class from previous queries
     removeErrorClass(result);
     if(typeof(data) === 'string'){
-
         // If the data doesn't contain a hero or is empty, we insert the error class
         insertErrorClass(data, result);
         result.innerHTML = data;
@@ -77,31 +75,15 @@ function displayHeroes(data){
  * @param {string} formData The data entered in the form
  */
 async function fetchData(formData){
-    // If data is entered, a post request is sent to the server
-    if(formData !== ''){
-        const response = await fetch('superheroes.php',{
-            method:'post',
-            headers:{
-                'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    });
-        // Recieve the response from the server as JSON data
-        const myJSON = await response.json();
-        return myJSON;
+    const response = await fetch(`superheroes.php?query=${formData}`);
+    if(response.ok){
+        // Returns the response as a string
+        return response.text();
     
-    // If no data is entered, a get request is sent to the server
+    // If any unexpected errors happen while fetching, an error is thrown
     }else{
-        const response = await fetch('superheroes.php');
-        if(response.ok){
-            // Returns the response as a string
-            return response.text();
-        
-        // If any unexpected errors happen while fetching, an error is thrown
-        }else{
-            const message = `An error has occured: ${response.status}`;
-            throw new Error(message);
-        }
+        const message = `An error has occured: ${response.status}`;
+        throw new Error(message);
     }
 }   
 
@@ -114,8 +96,24 @@ async function loadPHP(event){
     let form = document.getElementById('superhero');
     try{
         const phpData = await fetchData(form.value);
-        const heroes =  displayHeroes(phpData);
+        const processedData = await handleJSON(phpData);
+        console.log(processedData);
+        const heroes =  displayHeroes(processedData);
         }catch (error){
             console.log('There was an error: ' + error);
         }
     }   
+
+/**
+ * Attempts to parse a JSON object from a string passed in
+ * @param {string} data 
+ */
+function handleJSON(data){
+    try{
+        let parsedData = JSON.parse(data);
+        return parsedData;
+    }catch (error){
+        return data;
+    }
+    
+}
