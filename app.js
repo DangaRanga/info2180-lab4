@@ -16,12 +16,12 @@ function displayHeroData(heroData, targetDiv){
     }
     // Create the necessary HTML elements if the data is not a string
     if(typeof(heroData) !== 'string'){
-        let nameHeader = document.createElement('h2');
-        let name = document.createTextNode(heroData.name);
+        let nameHeader = document.createElement('h3');
+        let name = document.createTextNode(heroData.alias.toUpperCase());
         nameHeader.appendChild(name);
         targetDiv.appendChild(nameHeader);
-        let aliasHeader = document.createElement('h3');
-        let alias = document.createTextNode(`A.K.A ${heroData.alias}`);
+        let aliasHeader = document.createElement('h4');
+        let alias = document.createTextNode(`A.K.A ${heroData.name}`.toUpperCase());
         aliasHeader.appendChild(alias);
         targetDiv.appendChild(aliasHeader);
         let biographyArea = document.createElement('p');
